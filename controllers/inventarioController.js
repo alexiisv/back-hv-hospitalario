@@ -181,7 +181,24 @@ const crearInventario = async (req, res) => {
       ]
     );
 
-    res.status(201).json(result.rows[0]);
+    // res.status(201).json(result.rows[0]);
+    const nuevoEquipo = result.rows[0];
+
+    const codigoHv = `HV-${String(nuevoEquipo.id).padStart(6, "0")}`;
+
+    const updateResult = await pool.query(
+      `
+      UPDATE equipos_inventario
+      SET codigo_hv = $1
+      WHERE id = $2
+      RETURNING *
+      `,
+      [codigoHv, nuevoEquipo.id]
+    );
+
+    res.status(201).json(updateResult.rows[0]);
+    
+
   } catch (error) {
     console.error("Error al crear equipo en inventario:", error);
     res.status(500).json({ error: "Error al crear equipo en inventario" });

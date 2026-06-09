@@ -887,7 +887,12 @@ const generarPdfEquipo = async (req, res) => {
 
     const pdfBuffer = await generarPdfBuffer(data);
 
-    const nombre = `Hoja_vida_${data.equipo.codigo_inventario || data.equipo.id}.pdf`;
+    // const nombre = `Hoja_vida_${data.equipo.codigo_inventario || data.equipo.id}.pdf`;
+    const nombre = `Hoja_vida_${
+      data.equipo.codigo_hv ||
+      data.equipo.codigo_inventario ||
+      data.equipo.id
+    }.pdf`;
 
     res.set({
       "Content-Type": "application/pdf",
@@ -1058,9 +1063,73 @@ const generarZipPreventivosEse = async (req, res) => {
   }
 };
 
+const generarPdfUnificadoEse = async (req, res) => {
+  const { eseId } = req.params;
+
+  try {
+    const equiposResult = await pool.query(
+      `
+      SELECT id
+      FROM equipos_inventario
+      WHERE ese_id = $1
+      ORDER BY id ASC
+      `,
+      [eseId]
+    );
+
+    if (equiposResult.rows.length === 0) {
+      return res.status(404).json({
+        error: "No hay equipos en el inventario de esta ESE",
+      });
+    }
+
+    const paginasHtml = [];
+
+    for (const item of equiposResult.rows) {
+      const data = await obtenerDetalleEquipo(item.id);
+      if (!data) continue;
+
+      const htmlEquipo = generarHtmlEquipo(data);
+
+      const bodyContent = htmlEquipo
+        .replace(/^[\s\S]*<body>/i, "")
+        .replace(/<\/body>[\s\S]*$/i, "");
+
+      paginasHtml.push(bodyContent);
+    }
+
+    const htmlFinal = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8" />
+        ${require("../services/pdf/html/components/styles")}
+      </head>
+      <body>
+        ${paginasHtml.join("")}
+      </body>
+      </html>
+    `;
+
+    const pdfBuffer = await generarPdfDesdeHtml(htmlFinal);
+
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `inline; filename="Hojas_vida_ESE_${eseId}.pdf"`,
+      "Content-Length": pdfBuffer.length,
+    });
+
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error("Error generando PDF unificado:", error);
+    res.status(500).json({ error: "Error generando PDF unificado" });
+  }
+};
+
 module.exports = {
   generarPdfEquipo,
   generarZipPdfEse,
   generarZipPreventivosEse,
-  previewEquipoHtml
+  generarPdfUnificadoEse,
+  previewEquipoHtml,
 };

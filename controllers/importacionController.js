@@ -49,8 +49,8 @@ const mapearDatosInventario = (fila) => ({
   proveedor: limpiarValor(fila.PROVEEDOR),
   codigo_inventario: limpiarValor(fila.CODIGO_INVENTARIO),
   estado_equipo: limpiarValor(fila.ESTADO_EQUIPO),
-  frecuencia_mantenimiento: limpiarValor(fila.FRECUENCIA_MANTENIMIENTO),
   observaciones: limpiarValor(fila.OBSERVACIONES),
+  frecuencia_mantenimiento: limpiarValor(fila.FRECUENCIA_MANTENIMIENTO),
 });
 
 const validarImportacion = async (req, res) => {
@@ -240,8 +240,8 @@ const guardarImportacion = async (req, res) => {
             proveedor,
             codigo_inventario,
             estado_equipo,
-            frecuencia_mantenimiento,
             observaciones
+            frecuencia_mantenimiento,
           ) VALUES (
             $1, $2, $3, $4, $5, $6, $7, $8,
             $9, $10, $11, $12, $13, $14, $15, $16, $17
@@ -264,12 +264,28 @@ const guardarImportacion = async (req, res) => {
             datos.proveedor || null,
             datos.codigo_inventario || null,
             datos.estado_equipo || null,
-            datos.frecuencia_mantenimiento || null,
             datos.observaciones || null,
+            datos.frecuencia_mantenimiento || null,
           ]
         );
 
-        guardados.push(result.rows[0]);
+        // guardados.push(result.rows[0]);
+          const nuevoEquipo = result.rows[0];
+
+          const codigoHv = `HV-${String(nuevoEquipo.id).padStart(6, "0")}`;
+
+          const updateResult = await pool.query(
+            `
+            UPDATE equipos_inventario
+            SET codigo_hv = $1
+            WHERE id = $2
+            RETURNING *
+            `,
+            [codigoHv, nuevoEquipo.id]
+          );
+
+          guardados.push(updateResult.rows[0]);
+          
       } catch (error) {
         errores.push({
           fila: item.fila,

@@ -90,7 +90,7 @@ const styles = `
   }
 
   .section-title {
-    background: #83aaf8;
+    background: #ecf1f8;
     border-bottom: 1px solid #111;
     padding: 2.5mm 2mm;
     font-size: 10px;

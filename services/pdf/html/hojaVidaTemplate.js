@@ -70,16 +70,16 @@ const generarHtmlEquipo = ({ equipo, actividades, recomendaciones }) => {
       <div class="section">
         <div class="section-title">Características técnicas</div>
         <div class="grid-3">
-          ${box("Ancho", equipo.ancho)}
+          ${box("Ancho (cm)", equipo.ancho)}
           ${box("Resolución", equipo.resolucion)}
-          ${box("Peso", equipo.peso)}
-          ${box("Alto", equipo.alto)}
+          ${box("Peso (kg)", equipo.peso)}
+          ${box("Alto (cm)", equipo.alto)}
           ${box("Pantalla", equipo.pantalla)}
           ${box("Fuente aliment.", equipo.fuente_alimentacion)}
-          ${box("Fondo", equipo.fondo)}
+          ${box("Fondo (cm)", equipo.fondo)}
           ${box("Capacidad", equipo.capacidad)}
-          ${box("Voltaje", equipo.voltaje)}
-          ${box("Potencia", equipo.potencia)}
+          ${box("Voltaje (v)", equipo.voltaje)}
+          ${box("Potencia (w)", equipo.potencia)}
         </div>
 
         <div class="row description">
@@ -136,7 +136,7 @@ const generarHtmlEquipo = ({ equipo, actividades, recomendaciones }) => {
 
 </div>
 <p class="note1">
-        Hoja de Vida de mantenimiento biomédico
+        Hoja de Vida de Mantenimiento Biomédico
       </p>
     </div>
 
@@ -267,58 +267,7 @@ const generarHtmlEquipo = ({ equipo, actividades, recomendaciones }) => {
       </p>
     </div>
 
-    <!-- HOJA 3 -->
-    <div class="page">
-      ${header(equipo, "Formato de Mantenimiento Correctivo")}
-
-      <div class="section">
-        <div class="section-title">Datos del equipo</div>
-        <div class="grid-2">
-          ${box("Equipo", equipo.equipo)}
-          ${box("Ubicación", equipo.ubicacion)}
-          ${box("Marca", equipo.marca)}
-          ${box("Área", equipo.area)}
-          ${box("Modelo", equipo.modelo)}
-          ${box("Código inventario", equipo.codigo_inventario)}
-          ${box("Serie", equipo.serie)}
-          ${box("Estado equipo", equipo.estado_equipo)}
-        </div>
-      </div>
-
-      <div class="grid-2">
-        ${box("Fecha reporte", "")}
-        ${box("Reportado por", "")}
-      </div>
-
-      ${largeBox("Falla reportada")}
-      ${largeBox("Diagnóstico técnico")}
-      ${largeBox("Actividades realizadas")}
-
-      <div class="grid-2 mt">
-        <div>
-          <div class="section-title" style="border:1px solid #444;">Repuestos utilizados</div>
-          <div class="empty-box"></div>
-        </div>
-        <div>
-          <div class="section-title" style="border:1px solid #444;">Pruebas realizadas</div>
-          <div class="empty-box"></div>
-        </div>
-      </div>
-
-      <div class="grid-2 mt">
-        ${box("Resultado final", "")}
-        ${box("Estado final equipo", "")}
-        ${box("Fecha cierre", "")}
-        ${box("Tiempo ejecución", "")}
-        ${box("Técnico responsable", "")}
-        ${box("Recibido por", "")}
-      </div>
-
-      ${largeBox("Observaciones")}
-       <p class="note">
-        Mantenimiento correctivo de equipo biomédico
-      </p>
-    </div>
+   
    
 
   </body>
